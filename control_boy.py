@@ -1,5 +1,6 @@
 from pico2d import *
 
+from Drill10 import game_world
 from grass import Grass
 from boy import Boy
 
@@ -31,10 +32,11 @@ def reset_world():
     world = []
 
     grass = Grass()
-    world.append(grass)
+    game_world.add_object(grass, 0)
 
     boy = Boy()
-    world.append(boy)
+    game_world.add_object(boy, 1)
+
 
 
 

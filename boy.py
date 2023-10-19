@@ -2,8 +2,17 @@
 
 from pico2d import get_time, load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
 
+from Drill10 import game_world
+from Drill10.ball import Ball
+
+
 # state event check
 # ( state event type, event value )
+
+def fire_ball(self):
+    ball = Ball(self.x, self.y, self.face_dir * 10)
+    game_world.add_object(ball, 1)
+
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -45,7 +54,8 @@ class Idle:
 
     @staticmethod
     def exit(boy, e):
-        pass
+        if space_down(e):
+            boy.fire_ball()
 
     @staticmethod
     def do(boy):
@@ -70,7 +80,8 @@ class Run:
 
     @staticmethod
     def exit(boy, e):
-        pass
+        if space_down(e):
+            boy.fire_ball()
 
     @staticmethod
     def do(boy):
@@ -114,8 +125,8 @@ class StateMachine:
         self.boy = boy
         self.cur_state = Idle
         self.transitions = {
-            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep},
-            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
+            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle},
+            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run},
             Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle}
         }
 
